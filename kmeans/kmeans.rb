@@ -12,7 +12,9 @@ def main
 	    	#print "line -> #{line}"
 	    if((line.count "0-9") > 0)
 	    	attributes = line.gsub(/\s+/m, ' ').strip.split(" ").map { |s| s.to_i }
-	    	print "#{attributes} \n"
+	    	##last value in dataset is not an attribute
+	    	attributes.pop
+	    	#print "#{attributes} \n"
 	    	data[counter] = attributes
 	    	counter = counter + 1
 	    end
@@ -68,7 +70,7 @@ def main
 		end
 
 		#puts "distances -> #{distance}"
-		puts "groups -> #{group_c} vs #{groups} "
+		#puts "groups -> #{group_c} vs #{groups} "
 		
 		break if group_c == groups
 		
@@ -79,9 +81,9 @@ def main
 		groups_sum = Array.new(k){Array.new(atr_size,0)}
 		groups_count = Array.new(k,0)
 		data.each_with_index do |d,d_count| 
-			puts "#{d} -> Group #{groups[d_count]}" 
-			d.size.times do |c| #loop number_of_attribute.times
-				puts "#{groups_sum[groups[d_count]][c]} += #{d[c]}"
+			#puts "#{d} -> Group #{groups[d_count]}" 
+			##loop number_of_attribute.times
+			d.size.times do |c| 
 				groups_sum[groups[d_count]][c] += d[c]
 			end
 			groups_count[groups[d_count]] += 1;
@@ -89,21 +91,22 @@ def main
 
 		##avg the sum
 		new_centroids = Array.new(k){Array.new(k,0)}
-		print "group_sum\n"
+		#print "group_sum\n"
 		groups_sum.each_with_index do |group_sum,gs_count| 
-			puts "#{gs_count} -> #{group_sum}" 
+			#puts "#{gs_count} -> #{group_sum}" 
 			group_sum.each_with_index do |atr,atr_count|#each attribute sum
-				puts "#{atr}/#{groups_count[gs_count]}"
-				print atr.to_f/groups_count[gs_count]
-				puts "\n"
+				#puts "#{atr}/#{groups_count[gs_count]}"
+				#print atr.to_f/groups_count[gs_count]
+				#puts "\n"
 				new_centroids[gs_count][atr_count] = atr/groups_count[gs_count]
 			end
 		end
 
-		puts "groups_sum -> #{groups_sum}"
 		puts "groups_count -> #{groups_count}"
+=begin
+		puts "groups_sum -> #{groups_sum}"
 		puts "new_centroids -> #{new_centroids}"
-
+=end
 		centroids = new_centroids
 	end
 
@@ -111,7 +114,7 @@ def main
 	if defined? data_names
 		data_names.each_with_index { |e,i| puts "#{e} -> Group #{groups[i]+1}" }
 	else
-		groups.each_with_index { |group,i| puts "#{i+1} -> Group #{group}" }
+		groups.each_with_index { |group,i| print "#{i+1} -> Group #{group};" }
 	end
 		
 end
