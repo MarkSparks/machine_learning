@@ -1,7 +1,7 @@
 include Math
 
 def main
-	k = 2 #num of clusters
+	k = 2 ##num of clusters
 	atr_size = 3;
 	data = [[1,1,2],[2,1,1],[4,3,4],[5,4,5]]
 	data_names =  ['A','B','C','D']
@@ -10,7 +10,7 @@ def main
 	group_c = Array.new(data.size)
 	centroids = Array.new
 
-	#get initial centroids, first k elements
+	##get initial centroids, first k elements
 	k.times do |i|
 		centroids[i] = data[i]
 	end
@@ -19,19 +19,27 @@ def main
 	#for d in data
 	#end
 
-	#until groups stop changing
+	##until groups stop changing
 	loop do
-		#get distances
+		##get distances
 		data.each_with_index do |d,d_count|
 			print "Dataset #{d}\n"
 			centroids.each_with_index do |c,c_count|
-				puts "(#{d[0]} - #{c[0]}) + (#{d[1]} -#{c[1]}) "
-				v = (d[0]-c[0])**2 + (d[1]-c[1])**2
-				val = Math.sqrt(v.abs)
-				print "#{c[0]},#{c[1]} -> #{v} -> #{val}\n"
+				#puts "(#{d[0]} - #{c[0]}) + (#{d[1]} -#{c[1]}) "
+				#v = (d[0]-c[0])**2 + (d[1]-c[1])**2
+
+				##calulate distances
+				##get sum
+				sum = 0
+				d.each_with_index do |attr_value, attr_index|
+					sum = sum + (attr_value - c[attr_index])**2
+				end
+
+				val = Math.sqrt(sum.abs)
+				print "#{c[0]},#{c[1]} -> #{sum} -> #{val}\n"
 				distance[d_count][c_count] = val
 			end
-			#smallest distance
+			##smallest distance
 			smallest = smallestPos(distance[d_count]);
 			puts "smallest -> #{smallest}"
 			group_c[d_count] = smallest
@@ -44,8 +52,8 @@ def main
 		
 		groups = group_c
 
-		#determine new coordinates
-		#loop through each group
+		##determine new coordinates
+		##loop through each group
 		groups_sum = Array.new(k){Array.new(atr_size,0)}
 		groups_count = Array.new(k,0)
 		data.each_with_index do |d,d_count| 
@@ -58,7 +66,7 @@ def main
 			groups_count[groups[d_count]] += 1;
 		end
 
-		#avg the sum
+		##avg the sum
 		new_centroids = Array.new(k){Array.new(k,0)}
 		print "group_sum\n"
 		groups_sum.each_with_index do |group_sum,gs_count| 
@@ -78,7 +86,7 @@ def main
 		centroids = new_centroids
 	end
 
-	#print result
+	##print result
 	data_names.each_with_index { |e,i| puts "#{e} -> Group #{groups[i]+1}" }
 end
 

@@ -1,55 +1,84 @@
 include Math
 
 def main
-	k = 2 #num of clusters
-	atr_size = 3;
-	data = [[1,1,2],[2,1,1],[4,3,4],[5,4,5]]
-	data_names =  ['A','B','C','D']
+	##read data from file
+	counter = 0
+	data = Array.new
+	file = File.new("pimadiabetes.data.txt", "r")
+	while (line = file.gets)
+	    	#puts "#{counter}: #{line} \n"
+	    	#print "line length -> #{line.delete("\n").delete(" ").length} \n"
+	    	#print "line nums -> #{line.count "0-9"} \n"
+	    	#print "line -> #{line}"
+	    if((line.count "0-9") > 0)
+	    	attributes = line.gsub(/\s+/m, ' ').strip.split(" ").map { |s| s.to_i }
+	    	print "#{attributes} \n"
+	    	data[counter] = attributes
+	    	counter = counter + 1
+	    end
+	end
+
+	#print "count => #{attributes.length} \n"
+	#print "data => #{data}"
+	file.close
+
+	#exit
+
+	k = 2 ##num of clusters
+	atr_size = attributes.length;
+
 	distance = Array.new(data.size){Array.new(k)}
 	groups = Array.new(data.size)
 	group_c = Array.new(data.size)
 	centroids = Array.new
 
-	#get initial centroids, first k elements
+	##get initial centroids, first k elements
 	k.times do |i|
 		centroids[i] = data[i]
 	end
-	puts "centroids -> #{centroids}"
+	#puts "centroids -> #{centroids}"
 
 	#for d in data
 	#end
 
-	#until groups stop changing
+	##until groups stop changing
 	loop do
 		#get distances
 		data.each_with_index do |d,d_count|
-			print "Dataset #{d}\n"
+			#print "Dataset #{d}\n"
 			centroids.each_with_index do |c,c_count|
-				puts "(#{d[0]} - #{c[0]}) + (#{d[1]} -#{c[1]}) "
-				v = (d[0]-c[0])**2 + (d[1]-c[1])**2
-				val = Math.sqrt(v.abs)
-				print "#{c[0]},#{c[1]} -> #{v} -> #{val}\n"
+				#puts "(#{d[0]} - #{c[0]}) + (#{d[1]} -#{c[1]}) "
+				
+				##calculate distance
+				###get sum
+				sum = 0
+				d.each_with_index do |attr_value, attr_index|
+					sum = sum + (attr_value - c[attr_index])**2
+				end
+				###Calculate sqrt
+				val = Math.sqrt(sum.abs)
+				#print "#{c[0]},#{c[1]} -> #{v} -> #{val}\n"
+				###save distance
 				distance[d_count][c_count] = val
 			end
-			#smallest distance
+			##smallest distance
 			smallest = smallestPos(distance[d_count]);
-			puts "smallest -> #{smallest}"
+			##puts "smallest -> #{smallest}"
 			group_c[d_count] = smallest
 		end
 
-		puts "distances -> #{distance}"
+		#puts "distances -> #{distance}"
 		puts "groups -> #{group_c} vs #{groups} "
 		
 		break if group_c == groups
 		
 		groups = group_c
 
-		#determine new coordinates
-		#loop through each group
+		##determine new coordinates
+		##loop through each group
 		groups_sum = Array.new(k){Array.new(atr_size,0)}
 		groups_count = Array.new(k,0)
 		data.each_with_index do |d,d_count| 
-			#groups_centroid_sum[]
 			puts "#{d} -> Group #{groups[d_count]}" 
 			d.size.times do |c| #loop number_of_attribute.times
 				puts "#{groups_sum[groups[d_count]][c]} += #{d[c]}"
@@ -58,7 +87,7 @@ def main
 			groups_count[groups[d_count]] += 1;
 		end
 
-		#avg the sum
+		##avg the sum
 		new_centroids = Array.new(k){Array.new(k,0)}
 		print "group_sum\n"
 		groups_sum.each_with_index do |group_sum,gs_count| 
@@ -78,8 +107,13 @@ def main
 		centroids = new_centroids
 	end
 
-	#print result
-	data_names.each_with_index { |e,i| puts "#{e} -> Group #{groups[i]+1}" }
+	##print result
+	if defined? data_names
+		data_names.each_with_index { |e,i| puts "#{e} -> Group #{groups[i]+1}" }
+	else
+		groups.each_with_index { |group,i| puts "#{i+1} -> Group #{group}" }
+	end
+		
 end
 
 
