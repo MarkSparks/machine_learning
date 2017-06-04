@@ -40,7 +40,7 @@ def iD3(data,target,attr_num)
 		print "a-> #{a}\n"
 		#at attribute c e.g. Engine
 		if(a != (target-1))
-			#a_pos = a -1	
+			#a_pos = a - 1
 			##loop through all possible attributes
 			##get all possible attributes
 			attr_count = Array.new(data.size,0)
@@ -81,7 +81,13 @@ def iD3(data,target,attr_num)
 		end
 	end
 
-	print "Attr #{greatest+1} has the gratest IG"
+	print "Attr #{greatest+1} has the greatest IG\n"
+
+	##remove attribute to get new dataset
+	new_data = data.transpose
+	new_data.delete_at(greatest)
+	new_data =	new_data.transpose
+	print "#{new_data}\n"
 
 end
 
