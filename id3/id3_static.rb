@@ -33,11 +33,13 @@ end
 def iD3(data,target,attr_num)
 	#end recursion
 	if(attr_num <= 1)
+		p "iD3 complete"
 		return
 	end
 	#info entropy for system based on the target attr
 	iE_system = systemEntropy(data,target)
 
+	no_var = Array.new(attr_num-1){Array.new()}
 	#find information gain for values of all attributes
 	infoGain = Array.new(attr_num)
 	attr_num.times do |a|
@@ -61,10 +63,17 @@ def iD3(data,target,attr_num)
 				##each attr e.g. small engine
 				print "attr_Count -> #{aC}\n"
 				iE_attr = infoEntropy(data,target,a,i)
+
+				##mark attributes that have no variability
+				if(iE_attr == 0)
+					no_var[a] << i
+				end
+
 				sum = sum + ((aC.to_f/size.to_f)*iE_attr.to_f)
 			end
 			print "Sum -> #{sum}\n"
 			infoGain[a] = iE_system - sum
+
 
 			print "info Gain for attr #{a} -> #{infoGain[a]}\n\n"
 
@@ -82,11 +91,26 @@ def iD3(data,target,attr_num)
 
 	print "Attr #{greatest+1} has the greatest IG\n"
 
+	##remove fields with no variability in greatest
+	print "Data -> #{data}\n"
+	print "no_var -> #{no_var[greatest]}\n"
+	##remove values where attr greatest is either of the vales in no var
+	no_var[greatest].each do |nvVal|
+		#print "nvVal ->  #{nvVal}\n"
+		data.each_with_index do |d,i|
+			#print "d -> #{d} where val at #{greatest} == #{nvVal} \n"
+			if(d[greatest] == nvVal)
+				p "Toa"
+			end
+		end
+	end
+
+
 	##remove attribute to get new dataset
 	new_data = data.transpose
 	new_data.delete_at(greatest)
 	new_data =	new_data.transpose
-	print "#{new_data}\n"
+	print "New Data -> #{new_data}\n\n\n"
 
 	iD3(new_data,target-1,attr_num-1)
 
@@ -111,7 +135,7 @@ def systemEntropy(data,attr_pos)
 		entropy = entropy - ((aC.to_f/s.to_f) * log(aC.to_f/s.to_f,2))
 	end
 	#noEmptyCities = cities.reject { |c| c.empty? }
-	print "Entropy -> #{entropy}\n"
+	print "System Entropy -> #{entropy}\n"
 
  	return entropy
 end
@@ -124,7 +148,7 @@ def infoEntropy(data,target_attr,attr_pos,attr_value)
 
 	data.each { |d|
 		if(d[attr_pos] == attr_value)
-			print "d-> #{d}\n"
+			#print "d-> #{d}\n"
 			a_count[d[target_attr]] = a_count[d[target_attr]] + 1
 			##increse size of sub dataset
 			s = s + 1
