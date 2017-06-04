@@ -27,6 +27,10 @@ def main
 				'GTI','XJR','S500','911','Corvette',
 				'Insight','RSX','IS350','MR2','E320']
 
+	iD3(data,target,attr_num)
+end
+
+def iD3(data,target,attr_num)
 	#info entropy for system based on the target attr
 	iE_system = systemEntropy(data,target)
 
@@ -45,6 +49,11 @@ def main
 			end
 			attr_count.delete_if{|a| a == 0 }##if zero is between figures??
 			#print "Attr Count -> #{attr_count}\n"
+
+			#end recursion
+			if(attr_count.size <= 1)
+				return
+			end
 
 			##get ie for all attributes 
 			sum = 0.0
