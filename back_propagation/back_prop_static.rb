@@ -109,7 +109,6 @@ def main
 
 		#d_sta = Matrix[[(a*g*(1-g))],[(b*h*(1-h))]]
 
-
 		##Output of Hidden Layer
 		dS = Array.new(n)
 		e.each_with_index do |eI,r,c|

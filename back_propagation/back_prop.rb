@@ -31,11 +31,11 @@ def main
 
 	sum_E_sq = 0.0
 	
-	
 	##initial weights
 =begin
 	weights_W = Matrix[[1.2],[0.5],[0.3],[0.4],[1.2],[0.5],[0.3],[0.4]];
 =end
+
 	##max and min weight values
 	max = 1
 	min = -1
