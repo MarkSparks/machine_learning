@@ -100,11 +100,10 @@ def iD3(data,target,attr_num)
 		data.each_with_index do |d,i|
 			#print "d -> #{d} where val at #{greatest} == #{nvVal} \n"
 			if(d[greatest] == nvVal)
-				p "Toa"
+				data.delete_at(i)
 			end
 		end
 	end
-
 
 	##remove attribute to get new dataset
 	new_data = data.transpose
