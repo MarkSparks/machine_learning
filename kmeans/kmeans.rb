@@ -11,7 +11,7 @@ def main
 	    	#print "line nums -> #{line.count "0-9"} \n"
 	    	#print "line -> #{line}"
 	    if((line.count "0-9") > 0)
-	    	attributes = line.gsub(/\s+/m, ' ').strip.split(" ").map { |s| s.to_i }
+	    	attributes = line.gsub(/\s+/m, ' ').strip.split(" ").map { |s| s.to_f }
 	    	##last value in dataset is not an attribute
 	    	attributes.pop
 	    	#print "#{attributes} \n"

@@ -11,7 +11,7 @@ def main
 	file = File.new("pimadiabetes.data.txt", "r")
 	while (line = file.gets)
 	    if((line.count "0-9") > 0)
-	    	attributes = line.gsub(/\s+/m, ' ').strip.split(" ").map { |s| s.to_i }
+	    	attributes = line.gsub(/\s+/m, ' ').strip.split(" ").map { |s| s.to_f }
 	    	##last value in dataset is not an attribute
 	    	desired_outputs[counter] = attributes.pop
 	    	#print "#{attributes} \n"

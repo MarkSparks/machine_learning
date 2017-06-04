@@ -1,41 +1,38 @@
 include Math
 =begin
-
-	MODEL | Engine | Turbo | Weight | Fuel Eco | Fast
-	__________________________________________________
-	prius | small  | no    | average| good     | no
-	civic | small  | no    | light  | average  | no 
-	WRX   | small  | yes   | average| bad      | yes	
-
-	Engine: small => 0; medium => 1; large => 2
-	Turbo: no => 0; yes => 1
-	Weight: average => 0; light => 1; heavy => 2
-	Fuel: good => 0; average => 1; bad => 2
-	Fast: no => 0; yes => 1
+	***Diabetes Data***/
+	NUMBER OF ATTRIBUTES: 
+	8 
+	  A1. Number of times pregnant
+	  A2. Plasma glucose concentration a 2 hours in an oral
+	         glucose tolerance test
+	  A3. Diastolic blood pressure (mm Hg)
+	  A4. Triceps skin fold thickness (mm)
+	  A5. 2-Hour serum insulin (mu U/ml)
+	  A6. Body mass index (weight in kg/(height in m)^2)
+	  A7. Diabetes pedigree function
+	  A8. Age (years)
+	Brief statistical analysis: 
+	   Attribute number:    Mean:   Standard Deviation:
+	   A1.                     3.8     3.4
+	   A2.                   120.9    32.0
+	   A3.                    69.1    19.4
+	   A4.                    20.5    16.0
+	   A5.                    79.8   115.2
+	   A6.                    32.0     7.9
+	   A7.                     0.5     0.3
+	   A8.                    33.2    11.8
 
 =end
 
 def main
-=begin	
-	data = [[0,0,0,0,0],[0,0,1,1,0],[0,1,0,2,1],[1,0,2,2,1],[2,0,1,2,1],
-			[1,0,1,2,0],[2,1,2,2,0],[2,0,2,2,0],[1,1,1,2,1],[2,0,0,2,1],
-			[0,0,1,0,0],[0,0,0,1,0],[1,0,2,2,0],[0,1,0,1,0],[1,0,2,2,0]
-		  ];
-	data_names = ['Prius','Civic','WRX','M3','RS4',
-				'GTI','XJR','S500','911','Corvette',
-				'Insight','RSX','IS350','MR2','E320']
-=end
 	data = Array.new
-	desired_outputs = Array.new #expected_outputs
-
 	##read data from file
 	counter = 0
 	file = File.new("pimadiabetes.data.txt", "r")
 	while (line = file.gets)
 	    if((line.count "0-9") > 0)
-	    	attributes = line.gsub(/\s+/m, ' ').strip.split(" ").map { |s| s.to_i }
-	    	##last value in dataset is not an attribute
-	    	#desired_outputs[counter] = attributes.pop
+	    	attributes = line.gsub(/\s+/m, ' ').strip.split(" ").map { |s| s.to_f }
 	    	#print "#{attributes} \n"
 	    	data[counter] = attributes
 	    	counter = counter + 1
@@ -45,11 +42,14 @@ def main
 	file.close
 
 	n = data[0].size
+	#p n
 	##Target classification 
 	attr_num = data[0].size
 	target = attr_num #last attribute
 
-	sum_E_sq = 0.0
+	#p data
+
+	#exit
 
 	iD3(data,target,attr_num)
 end
@@ -73,8 +73,14 @@ def iD3(data,target,attr_num)
 			#a_pos = a - 1
 			##loop through all possible attributes
 			##get all possible attributes
-			attr_count = Array.new(data.size,0)
-			data.each do |d|
+			attr_count = Array.new(data.size+1,0)
+			print "Data size -> #{attr_count.size}"
+			#exit
+			data.each_with_index do |d,i|
+				if(attr_count[d[a]] == nil)
+					#print "attr_count[d[a]] -> #{attr_count[d[a]]}\n"
+					attr_count[d[a]] = 0
+				end
 				attr_count[d[a]] = attr_count[d[a]] + 1
 			end
 			attr_count.delete_if{|a| a == 0 }##if zero is between figures??
