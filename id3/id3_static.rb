@@ -19,13 +19,9 @@ def main
 	##Target classification ->  Fast
 	target = 5
 	attr_num = 5
-	data = [[0,0,0,0,0],[0,0,1,1,0],[0,1,1,2,1],[1,0,2,2,1],[2,0,0,2,1],
-			[1,0,1,2,0],[2,1,2,2,0],[2,0,0,2,1],[1,1,2,2,1],[2,0,0,2,1],
-			[1,0,0,0,0],
-			[1,0,1,1,0],
-			[0,0,1,2,1],
-			[1,1,2,2,1],
-			[2,0,0,2,1]
+	data = [[0,0,0,0,0],[0,0,1,1,0],[0,1,0,2,1],[1,0,2,2,1],[2,0,1,2,1],
+			[1,0,1,2,0],[2,1,2,2,0],[2,0,2,2,0],[1,1,1,2,1],[2,0,0,2,1],
+			[0,0,1,0,0],[0,0,0,1,0],[1,0,2,2,0],[0,1,0,1,0],[1,0,2,2,0]
 		  ];
 	data_names = ['Prius','Civic','WRX','M3','RS4',
 				'GTI','XJR','S500','911','Corvette',
@@ -34,7 +30,8 @@ def main
 	#info entropy for system based on the target attr
 	iE_system = systemEntropy(data,target)
 
-	#find entropy for values of all other attributes
+	#find information gain for values of all attributes
+	infoGain = Array.new(attr_num)
 	attr_num.times do |a|
 		print "a-> #{a}\n"
 		#at attribute c e.g. Engine
@@ -50,22 +47,32 @@ def main
 			#print "Attr Count -> #{attr_count}\n"
 
 			##get ie for all attributes 
-			sum = 0
+			sum = 0.0
 			size = data.size
 			attr_count.each_with_index do |aC,i|
 				##each attr e.g. small engine
 				print "attr_Count -> #{aC}\n"
 				iE_attr = infoEntropy(data,target,a,i)
-
-				sum = sum + ((aC/size)*iE_attr)
+				sum = sum + ((aC.to_f/size.to_f)*iE_attr.to_f)
 			end
+			print "Sum -> #{sum}\n"
+			infoGain[a] = iE_system - sum
 
-			infoGain = iE_system - sum
-
-			print "info Gain for attr #{a} -> #{infoGain}\n\n"
+			print "info Gain for attr #{a} -> #{infoGain[a]}\n\n"
 
 		end
 	end 
+	print "info Gains -> #{infoGain}\n"
+	##find greatest information gain
+	greatest = 0;#TODO: if the target attribute is at pos 0  
+	infoGain.each_with_index do |iG, attr_pos|
+		#p iG
+		if(iG != nil && iG > infoGain[greatest])
+			greatest = attr_pos
+		end
+	end
+
+	print "Attr #{greatest+1} has the gratest IG"
 
 end
 
@@ -120,6 +127,5 @@ def infoEntropy(data,target_attr,attr_pos,attr_value)
 
  	return entropy
 end
-
 
 main
