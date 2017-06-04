@@ -31,6 +31,10 @@ def main
 end
 
 def iD3(data,target,attr_num)
+	#end recursion
+	if(attr_num <= 1)
+		return
+	end
 	#info entropy for system based on the target attr
 	iE_system = systemEntropy(data,target)
 
@@ -49,11 +53,6 @@ def iD3(data,target,attr_num)
 			end
 			attr_count.delete_if{|a| a == 0 }##if zero is between figures??
 			#print "Attr Count -> #{attr_count}\n"
-
-			#end recursion
-			if(attr_count.size <= 1)
-				return
-			end
 
 			##get ie for all attributes 
 			sum = 0.0
@@ -88,6 +87,8 @@ def iD3(data,target,attr_num)
 	new_data.delete_at(greatest)
 	new_data =	new_data.transpose
 	print "#{new_data}\n"
+
+	iD3(new_data,target-1,attr_num-1)
 
 end
 
